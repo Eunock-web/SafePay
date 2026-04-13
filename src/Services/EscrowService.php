@@ -170,7 +170,7 @@ class EscrowService{
 
         } catch (Exception $e) {
             Log::error('Release method failed: ' . $e->getMessage(), ['transaction_id' => $transactionId]);
-            Transaction::where('transaction_id', $transactionId)->where('status', 'releasing')->update(['status' => 'escrow_lock']);
+            Transaction::where('transaction_id', $transactionId)->where('status', 'released')->update(['status' => 'escrow_lock']);
             return ['success' => false, 'error' => 'Une erreur d\'exécution interne est survenue.'];
         }
     }
