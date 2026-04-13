@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Log;
 class FedapayService{
         public function __construct(){
             $secretKey = config('safepay.secret_key');
-            $environment = config('safepay.enviroment');
+            $environment = config('safepay.environment');
 
             if (empty($secretKey) || empty($environment)) {
                 throw new InvalidArgumentException('Configuration FedaPay incomplète. Vérifiez votre .env');
