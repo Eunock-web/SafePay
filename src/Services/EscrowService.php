@@ -1,13 +1,15 @@
 <?php
 namespace Safepay\Services;
+
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Exception;
 use Safepay\Models\Transaction;
 use Safepay\Models\TransactionLog;
+use Exception;
 
-class EscrowService{
+class EscrowService
+{
     protected FedapayService $fedapayService;
 
     public function __construct(FedapayService $fedapayService)
@@ -15,7 +17,8 @@ class EscrowService{
         $this->fedapayService = $fedapayService;
     }
 
-        // Function to save a transaction in the Transaction and TransactionLog tables
+    // Function to save a transaction in the Transaction and TransactionLog tables
+
     public function handleTransaction($transactionId, $prestataireId)
     {
         $verification = $this->fedapayService->verifyCollect($transactionId);
@@ -46,7 +49,7 @@ class EscrowService{
                             'currency' => 'XOF',
                             'payment_method' => $txData->mode ?? 'unknown',
                             'description' => $txData->description ?? null,
-                            'status' => 'canceled'
+                            'status' => 'failed'
                         ]
                     );
                 }
@@ -62,7 +65,7 @@ class EscrowService{
                 'prestataire_id' => $prestataireId,
                 'description' => $txData->description ?? 'Success transaction',
                 'status' => $txData->status ?? 'approved',
-                'metadata' => $txData->custom_metadata 
+                'metadata' => $txData->custom_metadata
             ]);
 
             // Save the transaction (Escrow)
@@ -89,7 +92,7 @@ class EscrowService{
 
     // Function to release escrow funds to the user's number
     public function release($transactionId)
-    {   
+    {
         try {
             $txDetails = DB::transaction(function () use ($transactionId) {
                 // Find and lock the transaction with lockForUpdate() to prevent race conditions
@@ -167,12 +170,10 @@ class EscrowService{
 
             Transaction::where('transaction_id', $transactionId)->update(['status' => 'escrow_lock']);
             return ['success' => false, 'error' => 'La demande de création du paiement a échoué e sur FedaPay.'];
-
         } catch (Exception $e) {
             Log::error('Release method failed: ' . $e->getMessage(), ['transaction_id' => $transactionId]);
             Transaction::where('transaction_id', $transactionId)->where('status', 'released')->update(['status' => 'escrow_lock']);
-            return ['success' => false, 'error' => 'Une erreur d\'exécution interne est survenue.'];
+            return ['success' => false, 'error' => "Une erreur d'exécution interne est survenue."];
         }
     }
-
 }
