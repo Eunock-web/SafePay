@@ -19,7 +19,7 @@ Avant d'installer le package, assurez-vous que votre environnement respecte les 
 Installez le package directement via Composer en utilisant la commande suivante :
 
 ```shell
-composer require eunock-web/safepay
+composer require eunockweb/safepay
 ```
 
 Une fois le package installé, publiez les configurations et les migrations fournies par le package :
