@@ -20,6 +20,10 @@ class SafePayServiceProvider extends ServiceProvider{
             __DIR__.'/../config/safepay.php' => config_path('safepay.php')
         ], 'safepay-config');
 
+        $this->publishes([
+            __DIR__.'/../database/migrations' => database_path('migrations')
+        ], 'safepay-migrations');
+
         $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
         $this->loadRoutesFrom(__DIR__.'/../routes/safepay.php');
     }
