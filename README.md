@@ -22,10 +22,16 @@ Installez le package directement via Composer en utilisant la commande suivante 
 composer require eunockweb/safepay
 ```
 
-Une fois le package installé, publiez les configurations et les migrations fournies par le package :
+Une fois le package installé, publiez le fichier de configuration fourni par le package :
 
 ```shell
-php artisan vendor:publish --provider="Safepay\SafePayServiceProvider"
+php artisan vendor:publish --tag=safepay-config
+```
+
+**(Optionnel)** Les migrations du package sont chargées automatiquement. Cependant, si vous souhaitez les visualiser ou les modifier directement dans votre dossier `database/migrations`, vous pouvez les publier avec cette commande :
+
+```shell
+php artisan vendor:publish --tag=safepay-migrations
 ```
 
 Appliquez ensuite les migrations pour créer les tables nécessaires (`transactions` et `transaction_logs`) :
@@ -33,7 +39,6 @@ Appliquez ensuite les migrations pour créer les tables nécessaires (`transacti
 ```shell
 php artisan migrate
 ```
-
 ---
 
 ## ⚙️ Configuration
