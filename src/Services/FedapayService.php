@@ -21,7 +21,7 @@ class FedapayService{
 
         }
 
-        public function verifyCollect($transactionId){
+        public function verifyCollect(string $transactionId){
             try {
                 // Verify the status of the transaction in question
                 $transaction = FedaPayTransaction::retrieve($transactionId);
@@ -49,7 +49,7 @@ class FedapayService{
             }
         }
 
-        public function payout($data){
+        public function payout(array $data){
             try{
                 //create payout
                 $createPayout = FedapayPayout::create($data);

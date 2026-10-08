@@ -29,7 +29,7 @@ class EscrowService
      * transaction's custom_metadata (and Auth::id() for the client when called from a request).
      * A result with `retryable => true` is a transient failure the caller should retry.
      */
-    public function handleTransaction($transactionId, $prestataireId = null, $clientId = null)
+    public function handleTransaction(string $transactionId, $prestataireId = null, $clientId = null)
     {
         $verification = $this->fedapayService->verifyCollect($transactionId);
         $txData = $verification['data'] ?? null;
@@ -111,7 +111,7 @@ class EscrowService
      * escrow_lock when we are sure no money left. If the payout was created, a failure leaves it in
      * `releasing` (with `payout_id` set) for manual reconciliation, to rule out a double payout.
      */
-    public function release($transactionId)
+    public function release(string $transactionId)
     {
         $payoutCreated = false;
 

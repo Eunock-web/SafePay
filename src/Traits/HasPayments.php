@@ -5,11 +5,11 @@ use Safepay\Models\Transaction;
 use Safepay\Services\EscrowService;
 
 trait HasPayments {
-    public function chargeEscrow($transactionId, $prestataireId){
+    public function chargeEscrow(string $transactionId, string $prestataireId){
         return app(EscrowService::class)->handleTransaction($transactionId, $prestataireId, $this->getKey());
     }
 
-    public function releaseEscrow($transactionId){
+    public function releaseEscrow(string $transactionId){
         // Seul le client qui a payé peut libérer les fonds.
         $owned = Transaction::where('transaction_id', $transactionId)
             ->where('client_id', $this->getKey())
