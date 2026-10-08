@@ -25,7 +25,6 @@ class TestCase extends Orchestra
             'database' => ':memory:',
             'prefix'   => '',
         ]);
-$app['config']->set('safepay.webhook_secret', null);
         $app['config']->set('safepay.secret_key', 'test_secret_key');
         $app['config']->set('safepay.environment', 'sandbox');
         $app['config']->set('safepay.webhook_secret', 'test_webhook_secret');

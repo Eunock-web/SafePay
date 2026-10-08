@@ -18,8 +18,10 @@ return new class extends Migration {
             $table->decimal('amount', 10, 2);
             $table->string('currency', 3)->default('XOF');
             $table->string('description')->nullable();
-            $table->enum('payment_method', ['mobile_money', 'card', 'virement'])->nullable()->default('mobile_money');
-            $table->enum('status', ['escrow_lock', 'failed', 'approved', 'released']);
+            $table->string('payment_method')->nullable()->default('mobile_money');
+            $table->decimal('commission', 10, 2)->nullable();  // Platform fee withheld at release
+            $table->string('payout_id')->nullable();  // ID of the FedaPay payout, set before the funds are sent
+            $table->string('status')->index();  // see Safepay\Enums\TransactionStatus
             $table->timestamps();
         });
     }

@@ -14,6 +14,9 @@ class ReleaseEscrowJob implements ShouldQueue{
     use InteractsWithQueue;
     use SerializesModels;
 
+    // Never retried blindly: release() is guarded by the transaction status, and a failed payout needs a human look.
+    public int $tries = 1;
+
     public function __construct(public string $transactionId)
     {
         

@@ -8,8 +8,7 @@ use Safepay\Services\FedapayService;
 class SafePayServiceProvider extends ServiceProvider{
     public function register():void{
         $this->app->singleton(EscrowService::class, function ($app){
-            $fedapayservice = new FedapayService();
-            return new EscrowService($fedapayservice);
+            return new EscrowService($app->make(FedapayService::class));
         });
 
         $this->mergeConfigFrom(__DIR__.'/../config/safepay.php', 'safepay');
@@ -24,7 +23,10 @@ class SafePayServiceProvider extends ServiceProvider{
             __DIR__.'/../database/migrations' => database_path('migrations')
         ], 'safepay-migrations');
 
-        $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
+        // Évite la double exécution si l'utilisateur a publié les migrations.
+        if (empty(glob(database_path('migrations/*_create_transactions_table.php')))) {
+            $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
+        }
         $this->loadRoutesFrom(__DIR__.'/../routes/safepay.php');
     }
 }

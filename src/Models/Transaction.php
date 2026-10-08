@@ -18,11 +18,14 @@ class Transaction extends Model
         'currency',
         'description',
         'payment_method',
+        'commission',
+        'payout_id',
         'status'
     ];
 
     protected $casts = [
         'amount' => 'decimal:2',
+        'commission' => 'decimal:2',
     ];
 
     public function client(): BelongsTo

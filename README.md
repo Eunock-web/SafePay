@@ -117,6 +117,8 @@ public function validerCommande(EscrowService $escrowService, $transactionId)
 }
 ```
 
+> **Commission et délai** : `ESCROW_COMMISSION` (en %, défaut 2.5) est retenue sur le versement au prestataire (montant versé = montant − commission, enregistrée dans `transactions.commission`). `ESCROW_DELAY` (en heures, défaut 48, `0` pour désactiver) planifie une libération automatique via `ReleaseEscrowJob`. Cela nécessite un driver de queue autre que `sync` et un worker actif ; avec `sync`, aucune libération automatique n'est planifiée.
+
 ### 3. Consulter l'historique (Escrow Transactions)
 
 Récupérer facilement l'historique des transactions liées à la plateforme par l'utilisateur connecté en passant par la relation Eloquent :
@@ -146,7 +148,10 @@ L'endpoint à configurer est :
 5. Copiez la clé **Signature (Secret Key)** générée par FedaPay.
 6. Collez-la dans votre `.env` à la variable `FEDAPAY_WEBHOOK_SECRET`.
 
-**Attention** : Pensez à exclure l'URL `/webhook/fedapay` de la vérification de jeton CSRF de Laravel dans `app/Http/Middleware/VerifyCsrfToken.php` si nécessaire.
+**Important** :
+- La route est enregistrée dans le groupe `api` (pas de CSRF). Si `FEDAPAY_WEBHOOK_SECRET` est absent, le webhook répond `500` et rien n'est traité.
+- Le client et le prestataire ne sont **jamais** lus depuis la requête du webhook : renseignez-les à la création de la transaction FedaPay via `custom_metadata` (`client_id` et `prestataire_id`).
+- Le traitement passe par la queue (5 essais avec backoff) : lancez un worker (`php artisan queue:work`).
 
 ---
 
